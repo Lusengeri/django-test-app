@@ -24,9 +24,9 @@ sudo sed -i "s/ALLOWED_HOSTS = \[\]/ALLOWED_HOSTS = \['${MY_IP}'\]/" /home/ubunt
 
 # Set-up uwsgi
 # Create the socket location
-sudo mkdir -p /run/uwsgi/ 
-sudo chown ubuntu:www-data /run/uwsgi/
-sudo chmod 664 /run/uwsgi/
+#sudo mkdir -p /run/uwsgi/ 
+#sudo chown ubuntu:www-data /run/uwsgi/
+#sudo chmod 664 /run/uwsgi/
 
 cd /home/ubuntu/django-test-app/
 uwsgi --ini /home/ubuntu/django-test-app/django-test-app.ini &
