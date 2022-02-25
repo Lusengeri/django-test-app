@@ -2,7 +2,7 @@
 
 # Install the dependencies
 sudo apt update
-sudo apt install python3-dev python3-distutils python3-pip python3-venv nginx -y
+sudo apt install python3-dev gcc python3-distutils python3-pip python3-venv nginx -y
 
 cd /home/ubuntu/
 git clone https://github.com/Lusengeri/django-test-app
