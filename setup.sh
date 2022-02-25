@@ -26,9 +26,10 @@ sudo sed -i "s/ALLOWED_HOSTS = \[\]/ALLOWED_HOSTS = \['${MY_IP}'\]/" /home/ubunt
 # Create the socket location
 sudo mkdir -p /run/uwsgi/ 
 sudo chown ubuntu:www-data /run/uwsgi/
+sudo chmod 664 /run/uwsgi/
 
 cd /home/ubuntu/django-test-app/
-uwsgi --ini /home/ubuntu/django-test-app/django-test-app.ini -d
+uwsgi --ini /home/ubuntu/django-test-app/django-test-app.ini &
 
 # Set-up nginx 
 # And insert the IP address in nginx site configuration file
