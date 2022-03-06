@@ -1,2 +1,3 @@
 #!/bin/bash
-echo "Before install script running!" >> /home/ubuntu/log
+echo "Before install script running again!" >> /home/ubuntu/log
+sudo rm -rf /home/ubuntu/django-test-app
