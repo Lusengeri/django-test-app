@@ -2,6 +2,8 @@
 
 echo "Starting 'after_install.sh'..." >> /home/ubuntu/debug.log
 
+sudo chown -R ubuntu:www-data /home/ubuntu/django-test-app/
+
 cd /home/ubuntu/
 
 # Set up the Python virtual environment
