@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo "Starting 'after_install.sh'..." >> /home/ubuntu/debug.log
-
 sudo chown -R ubuntu:www-data /home/ubuntu/django-test-app/
 
 cd /home/ubuntu/
@@ -26,5 +24,3 @@ sudo sed -i "s/ALLOWED_HOSTS = \[\]/ALLOWED_HOSTS = \['${MY_IP}'\]/" /home/ubunt
 sudo sed -i 's/<my_ip_address>/'${MY_IP}'/' /home/ubuntu/django-test-app/django-test-app.conf
 sudo cp /home/ubuntu/django-test-app/django-test-app.conf /etc/nginx/sites-available/django-test-app.conf
 sudo ln -s /etc/nginx/sites-available/django-test-app.conf /etc/nginx/sites-enabled/django-test-app.conf 
-
-echo "Completed 'after_install.sh'" >> /home/ubuntu/debug.log

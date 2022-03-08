@@ -1,5 +1,4 @@
 #!/bin/bash
 
-echo "Starting 'application_stop'..." >> /home/ubuntu/debug.log
+# Stop the previous uwsgi process
 killall uwsgi
-echo "Completed 'application_stop'" >> /home/ubuntu/debug.log
