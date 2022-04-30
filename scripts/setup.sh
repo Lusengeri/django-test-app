@@ -2,7 +2,7 @@
 
 # Install the general dependencies
 sudo apt update
-sudo apt install python3-dev gcc python3-distutils python3-pip python3-venv nginx -y
+sudo apt install python3-dev gcc python3-distutils python3-pip python3-venv postgresql libpq-dev nginx -y
 
 # Install dependencies for code-deploy agent
 sudo apt install ruby-full wget -y
