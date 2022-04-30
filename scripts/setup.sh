@@ -40,16 +40,15 @@ pip3 install django
 pip3 install -r /home/ubuntu/django-test-app/requirements.txt
 
 # Get IP address
-MY_IP=`curl -s https://icanhazip.com`
+#MY_IP=`curl -s https://icanhazip.com`
 
 # Change ALLOWED_HOSTS[] in settings.py to ALLOWED_HOSTS = ['<my_ip_address>']
-sudo sed -i "s/ALLOWED_HOSTS = \[\]/ALLOWED_HOSTS = \['${MY_IP}'\]/" /home/ubuntu/django-test-app/backend/backend/settings.py
+#sudo sed -i "s/ALLOWED_HOSTS = \[\]/ALLOWED_HOSTS = \['${MY_IP}'\]/" /home/ubuntu/django-test-app/backend/backend/settings.py
 
 # Set-up nginx site configuration file  
-sudo sed -i 's/<my_ip_address>/'${MY_IP}'/' /home/ubuntu/django-test-app/django-test-app.conf
+#sudo sed -i 's/<my_ip_address>/'${MY_IP}'/' /home/ubuntu/django-test-app/django-test-app.conf
 sudo cp /home/ubuntu/django-test-app/django-test-app.conf /etc/nginx/sites-available/django-test-app.conf
 sudo ln -s /etc/nginx/sites-available/django-test-app.conf /etc/nginx/sites-enabled/django-test-app.conf 
-
 
 sudo service nginx restart
 
