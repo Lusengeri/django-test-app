@@ -59,3 +59,21 @@ cd /home/ubuntu/django-test-app/backend/
 uwsgi --ini /home/ubuntu/django-test-app/backend/django-test-app.ini
 
 sudo chown ubuntu:www-data /home/ubuntu/django-test-app/backend/django-test-app.sock
+
+# Set-up React front-end
+# Install node ppa
+#curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+#sudo apt install nodejs -y
+
+# Set up Nodejs and Yarn
+curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add
+echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+sudo apt update
+sudo apt install yarn -y
+
+# Move to frontend folder and install dependencies
+cd /home/ubuntu/django-test-app/frontend/
+yarn install
+yarn build
+
+sudo cp /home/ubuntu/django-test-app/frontend/build/* /var/www/
