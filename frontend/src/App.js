@@ -48,14 +48,14 @@ function App() {
   const toggleCompletion= async (id) => {
     const currentTask = await fetchTask(id)
     const updatedTask = {...currentTask, completed: !(currentTask.completed)}
-    const res = await fetch(`http://localhost:5000/api/task-update/${id}`, {
+    const res = await fetch(`http://localhost:8000/api/task-update/${id}/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(updatedTask)
     })
-
+    
     const newValue = await res.json()
 
     setTasks(tasks.map(task => task.id === id ? newValue : task))
@@ -72,7 +72,6 @@ function App() {
 
     setTasks([...tasks, newTask])
   }
-
 
   return (
     <Router>
