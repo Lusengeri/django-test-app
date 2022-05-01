@@ -81,3 +81,8 @@ yarn install
 yarn build
 
 sudo cp -r /home/ubuntu/django-test-app/frontend/build/* /var/www/
+
+for dir in /home/ubuntu/django-test-app/backend/static/*
+do
+	ln -s "$dir" /var/www/static/
+done
