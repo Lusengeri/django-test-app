@@ -80,4 +80,4 @@ sudo sed -i "s/localhost:8000/${MY_IP}/" /home/ubuntu/django-test-app/frontend/s
 yarn install
 yarn build
 
-sudo cp -r /home/ubuntu/django-test-app/frontend/build/ /var/www/
+sudo cp -r /home/ubuntu/django-test-app/frontend/build/* /var/www/
