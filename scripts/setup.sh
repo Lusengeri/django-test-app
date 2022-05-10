@@ -39,7 +39,7 @@ source /home/ubuntu/.env/bin/activate
 pip3 install wheel 
 pip3 install uwsgi
 pip3 install django
-pip3 install -r /home/ubuntu/django-test-app/requirements.txt
+pip3 install -r /home/ubuntu/django-test-app/backend/requirements.txt
 
 # Set-up nginx site configuration file
 sudo cp /home/ubuntu/django-test-app/django-test-app.conf /etc/nginx/sites-available/django-test-app.conf

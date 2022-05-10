@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  backend:
+    container_name: django_backend
+    build:
+      context: ./backend
+      dockerfile: django.Dockerfile
+    environment:
+      - DBNAME=taskmanagerdb
+      - DBUSER=postgres
+      - DBPASSWORD=postpass
+      - DBHOST=localhost
+    command: >
+      sh -c "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/usr/src/django-test-app/backend
+    network_mode: "host"
+
+  frontend:
+    container_name: react_frontend
+    build:
+      context: ./frontend
+      dockerfile: react.Dockerfile
+    ports:
+      - 3000:3000
+    command: >
+      sh -c "yarn start"
+    volumes:
+      - ./frontend:/usr/src/django-test-app/frontend
+    network_mode: "host"
+  #   stdin_open: true
