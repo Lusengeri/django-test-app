@@ -50,8 +50,8 @@ pip3 install django
 pip3 install -r /home/ubuntu/django-test-app/backend/requirements.txt
 
 # Database migration
-sudo -u postgres -c sh 'python3 /home/ubuntu/django-test-app/backend/manage.py makemigrations'
-sudo -u postgres -c sh 'python3 /home/ubuntu/django-test-app/backend/manage.py migrate'
+sudo -u postgres sh -c 'python3 /home/ubuntu/django-test-app/backend/manage.py makemigrations'
+sudo -u postgres sh -c 'python3 /home/ubuntu/django-test-app/backend/manage.py migrate'
 
 # Set-up nginx site configuration file
 sudo cp /home/ubuntu/django-test-app/django-test-app.conf /etc/nginx/sites-available/django-test-app.conf
