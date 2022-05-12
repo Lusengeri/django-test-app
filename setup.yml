@@ -26,12 +26,24 @@
 
 - hosts: django_test_app_servers
   become: true
-  user: ubuntu
+  become_user: ubuntu
   gather_facts: no
   tasks:
+    - name: Retrieve set-up script 
+      ansible.builtin.command: wget https://raw.githubusercontent.com/Lusengeri/django-test-app/master/scripts/setup.sh
+      args:
+          chdir: /home/ubuntu
+
+    - name: make script executable 
+      ansible.builtin.command: chmod +x setup.sh
+      args:
+          chdir: /home/ubuntu
+
     - name: Install application from script
-      shell: |
-        cd /home/ubuntu/
-        wget https://raw.githubusercontent.com/Lusengeri/django-test-app/master/scripts/setup.sh
-        chmod +x setup.sh
-        ./setup.sh  "{{ hostvars['localhost']['stack'].stack_outputs.DBEndpoint }} {{ hostvars['localhost']['stack'].stack_outputs.ELBDNSName}}"
+      ansible.builtin.command: 
+        argv:
+          - ./setup.sh 
+          - "{{ hostvars['localhost']['stack'].stack_outputs.DBEndpoint }}"
+          - "{{ hostvars['localhost']['stack'].stack_outputs.ELBDNSName }}"
+      args:
+        chdir: /home/ubuntu
