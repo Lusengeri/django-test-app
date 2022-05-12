@@ -28,7 +28,7 @@ sudo rm -f /etc/nginx/sites-available/django-test-app.conf
 sudo rm -f /etc/nginx/sites-enabled/django-test-app.conf
 
 # Set up environment variables
-sudo  bash -c 'echo "export DBUSER=postgres" >> /home/ubuntu/.bashrc'
+sudo  bash -c 'echo "export DBUSER=ubuntu" >> /home/ubuntu/.bashrc'
 sudo  bash -c 'echo "export DBNAME=taskmanagerdb" >> /home/ubuntu/.bashrc'
 sudo  bash -c 'echo "export DBHOST=$1" >> /home/ubuntu/.bashrc'
 sudo  bash -c 'echo "export DBHOST='$1'" >> /home/ubuntu/.bashrc'
