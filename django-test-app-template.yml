@@ -264,19 +264,25 @@ Resources:
 
 Outputs:
   Instance1PublicIP: 
-    Description: 'IP address of newly created Instance1'
+    Description: 'IP address of created Instance1'
     Value: !GetAtt 
       - Instance1
       - PublicIp
 
   Instance2PublicIP: 
-    Description: 'IP address of newly created Instance2'
+    Description: 'IP address of created Instance2'
     Value: !GetAtt 
       - Instance2
       - PublicIp
 
   DBEndpoint:
-    Description: 'The Endpoint of the newly created Database instance'
+    Description: 'The Endpoint of the created Database instance'
     Value: !GetAtt
       - PostgresDB
       - Endpoint.Address
+
+  ELBDNSName:
+    Description: 'The DNS name of the provisioned ELB'
+    Value: !GetAtt
+      - ELB
+      - DNSName 

@@ -1,0 +1,37 @@
+---
+
+- hosts: localhost
+  tasks:
+    - name: launch the application stack
+      cloudformation:
+        stack_name: "django-test-app-stack"
+        state: "present"
+        region: 'us-west-2'
+        template: "django-test-app-template.yml"
+      register: stack
+
+    - name: Add new instances to host group
+      add_host: hostname={{ item }} groupname=django_test_app_servers
+      with_items: '{{ [stack.stack_outputs.Instance1PublicIP, stack.stack_outputs.Instance2PublicIP] }}'
+
+    - name: Add EC2 instances as known hosts
+      known_hosts:
+        name: "{{ item }}"
+        key: "{{ lookup('pipe', 'ssh-keyscan -t rsa ' + item) }}"
+      with_items: '{{ [stack.stack_outputs.Instance1PublicIP, stack.stack_outputs.Instance2PublicIP] }}'
+
+    - name: Wait for SSH to come up
+      wait_for: host={{ item }} port=22 delay=60 timeout=320 state=started
+      with_items: '{{ [stack.stack_outputs.Instance1PublicIP, stack.stack_outputs.Instance2PublicIP] }}'
+
+- hosts: django_test_app_servers
+  become: true
+  user: ubuntu
+  gather_facts: no
+  tasks:
+    - name: Install application from script
+      shell: |
+        cd /home/ubuntu/
+        wget https://raw.githubusercontent.com/Lusengeri/django-test-app/master/scripts/setup.sh
+        chmod +x setup.sh
+        ./setup.sh  "{{ hostvars['localhost']['stack'].stack_outputs.DBEndpoint }} {{ hostvars['localhost']['stack'].stack_outputs.ELBDNSName}}"

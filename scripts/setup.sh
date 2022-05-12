@@ -27,6 +27,14 @@ sudo rm -f /etc/nginx/sites-enabled/default
 sudo rm -f /etc/nginx/sites-available/django-test-app.conf
 sudo rm -f /etc/nginx/sites-enabled/django-test-app.conf
 
+# Set up environment variables
+sudo  bash -c 'echo "export DBUSER=postgres" >> /home/ubuntu/.bashrc'
+sudo  bash -c 'echo "export DBNAME=taskmanagerdb" >> /home/ubuntu/.bashrc'
+sudo  bash -c 'echo "export DBHOST=$1" >> /home/ubuntu/.bashrc'
+sudo  bash -c 'echo "export DBHOST='$1'" >> /home/ubuntu/.bashrc'
+sudo  bash -c 'echo "export DBPASSWORD=postpass" >> /home/ubuntu/.bashrc'
+sudo  bash -c 'echo "export DBPORT=5432" >> /home/ubuntu/.bashrc'
+
 # Clone the app repository
 git clone https://github.com/Lusengeri/django-test-app
 sudo chown -R ubuntu:www-data /home/ubuntu/django-test-app
@@ -40,6 +48,10 @@ pip3 install wheel
 pip3 install uwsgi
 pip3 install django
 pip3 install -r /home/ubuntu/django-test-app/backend/requirements.txt
+
+# Database migration
+python3 /home/ubuntu/django-test-app/backend/manage.py makemigrations
+python3 /home/ubuntu/django-test-app/backend/manage.py migrate
 
 # Set-up nginx site configuration file
 sudo cp /home/ubuntu/django-test-app/django-test-app.conf /etc/nginx/sites-available/django-test-app.conf
@@ -70,10 +82,11 @@ sudo apt update
 sudo apt install --no-install-recommends yarn -y
 
 # Get current IP address of running server
-MY_IP=`curl -s https://icanhazip.com`
+#MY_IP=`curl -s https://icanhazip.com`
+MY_DOMAIN=$2
 
 # Set base url for production environment
-sudo sed -i "s/localhost:8000/${MY_IP}/" /home/ubuntu/django-test-app/frontend/src/App.js
+sudo sed -i "s/localhost:8000/${MY_DOMAIN}/" /home/ubuntu/django-test-app/frontend/src/App.js
 
 # Move to frontend folder, install dependencies and create production build
 cd /home/ubuntu/django-test-app/frontend/
