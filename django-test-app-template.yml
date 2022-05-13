@@ -255,8 +255,8 @@ Resources:
       DBSubnetGroupName: !Ref DBSubnetGroup
       Engine: postgres
       EngineVersion: 13.6
-      MasterUsername: postgres 
-      MasterUserPassword: postpass  
+      MasterUsername: ubuntu
+      MasterUserPassword: password  
       Port: 5432
       StorageType: gp2
       VPCSecurityGroups: 

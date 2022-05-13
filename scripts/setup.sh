@@ -32,8 +32,8 @@ sudo rm -rf /var/log/uwsgi/
 sudo rm -rf /run/uwsgi/
 
 # Set up database user
-sudo -u postgres PGPASSWORD=postpass psql -U postgres -h $1 -c "create user ubuntu with encrypted password 'password'"
-sudo -u postgres PGPASSWORD=postpass psql -U postgres -h $1 -c "grant all privileges on database taskmanagerdb to ubuntu"
+#sudo -u postgres PGPASSWORD=postpass psql -U postgres -h $1 -c "create user ubuntu with encrypted password 'password'"
+#sudo -u postgres PGPASSWORD=postpass psql -U postgres -h $1 -c "grant all privileges on database taskmanagerdb to ubuntu"
 
 # Set up environment variables
 echo "export DBUSER=ubuntu" >> /home/ubuntu/.bashrc
