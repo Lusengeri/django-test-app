@@ -27,6 +27,10 @@ sudo rm -f /etc/nginx/sites-enabled/default
 sudo rm -f /etc/nginx/sites-available/django-test-app.conf
 sudo rm -f /etc/nginx/sites-enabled/django-test-app.conf
 
+killall uwsgi
+sudo rm -rf /var/log/uwsgi/
+sudo rm -rf /run/uwsgi/
+
 # Set up database user
 sudo -u postgres PGPASSWORD=postpass psql -U postgres -h $1 -c "create user ubuntu with encrypted password 'password'"
 sudo -u postgres PGPASSWORD=postpass psql -U postgres -h $1 -c "grant all privileges on database taskmanagerdb to ubuntu"
@@ -37,6 +41,9 @@ echo "export DBNAME=taskmanagerdb" >> /home/ubuntu/.bashrc
 echo "export DBHOST=$1" >> /home/ubuntu/.bashrc
 echo "export DBPASSWORD=password" >> /home/ubuntu/.bashrc
 echo "export DBPORT=5432" >> /home/ubuntu/.bashrc
+echo "export DATABASE_URL=postgresql://ubuntu:password@$1:5432/taskmanagerdb"
+
+source /home/ubuntu/.bashrc
 
 # Clone the app repository
 git clone https://github.com/Lusengeri/django-test-app
