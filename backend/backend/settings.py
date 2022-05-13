@@ -82,16 +82,17 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        #'ENGINE': 'django.db.backends.postgresql',
-        #'NAME': os.getenv('DBNAME'),
-        #'USER': os.getenv('DBUSER'),
-        #'PASSWORD': os.getenv('DBPASSWORD'),
-        #'HOST': os.getenv('DBHOST'),
-        #'PORT': '5432',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DBNAME'),
+        'USER': os.getenv('DBUSER'),
+        'PASSWORD': os.getenv('DBPASSWORD'),
+        'HOST': os.getenv('DBHOST'),
+        'PORT': '5432',
     }
 }
 
-DATABASES ['default'] = dj_database_url.config()
+DATABASE_URL=os.getenv('DATABASE_URL')
+DATABASES ['default'] = dj_database_url.config(conn_max_age=600)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
