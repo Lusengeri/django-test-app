@@ -92,6 +92,12 @@ DATABASES = {
 }
 
 DATABASES ['default'] = dj_database_url.config(default=os.getenv('DATABASE_URL'), conn_max_age=600)
+DATABASES ['default']['ENGINE'] = 'django.db.backends.postgresql'
+DATABASES ['default']['NAME'] = os.getenv('DBNAME')
+DATABASES ['default']['USER'] = os.getenv('DBUSER')
+DATABASES ['default']['PASSWORD'] = os.getenv('DBPASSWORD')
+DATABASES ['default']['HOST'] = os.getenv('DBHOST')
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
