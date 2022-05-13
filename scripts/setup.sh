@@ -41,7 +41,7 @@ echo "export DBNAME=taskmanagerdb" >> /home/ubuntu/.bashrc
 echo "export DBHOST=$1" >> /home/ubuntu/.bashrc
 echo "export DBPASSWORD=password" >> /home/ubuntu/.bashrc
 echo "export DBPORT=5432" >> /home/ubuntu/.bashrc
-echo "export DATABASE_URL=postgresql://ubuntu:password@$1:5432/taskmanagerdb" >> /home/ubuntu/.bashrc
+echo "export DATABASE_URL=postgres://ubuntu:password@$1:5432/taskmanagerdb" >> /home/ubuntu/.bashrc
 
 source /home/ubuntu/.bashrc
 
