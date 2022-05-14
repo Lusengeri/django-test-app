@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/bin/bash
 
 # Install the general dependencies
 sudo apt update
