@@ -38,14 +38,14 @@ sudo rm -rf /run/uwsgi/
 #sudo -u postgres PGPASSWORD=postpass psql -U postgres -h $1 -c "grant all privileges on database taskmanagerdb to ubuntu"
 
 # Set up environment variables
-echo "export DBUSER=ubuntu" >> /home/ubuntu/.bashrc
-echo "export DBNAME=taskmanagerdb" >> /home/ubuntu/.bashrc
-echo "export DBHOST=$1" >> /home/ubuntu/.bashrc
-echo "export DBPASSWORD=password" >> /home/ubuntu/.bashrc
-echo "export DBPORT=5432" >> /home/ubuntu/.bashrc
-echo "export DATABASE_URL=postgres://ubuntu:password@$1:5432/taskmanagerdb" >> /home/ubuntu/.bashrc
+#echo "export DBUSER=ubuntu" >> /home/ubuntu/.bashrc
+#echo "export DBNAME=taskmanagerdb" >> /home/ubuntu/.bashrc
+#echo "export DBHOST=$1" >> /home/ubuntu/.bashrc
+#echo "export DBPASSWORD=password" >> /home/ubuntu/.bashrc
+#echo "export DBPORT=5432" >> /home/ubuntu/.bashrc
+#echo "export DATABASE_URL=postgres://ubuntu:password@$1:5432/taskmanagerdb" >> /home/ubuntu/.bashrc
 
-source /home/ubuntu/.bashrc
+#source /home/ubuntu/.bashrc
 
 # Clone the app repository
 git clone https://github.com/Lusengeri/django-test-app
@@ -95,10 +95,10 @@ sudo apt install --no-install-recommends yarn -y
 
 # Get current IP address of running server
 #MY_IP=`curl -s https://icanhazip.com`
-MY_DOMAIN=$2
+#MY_DOMAIN=$2
 
 # Set base url for production environment
-sudo sed -i "s/localhost:8000/${MY_DOMAIN}/" /home/ubuntu/django-test-app/frontend/src/App.js
+sudo sed -i "s/localhost:8000/$ELBDNSNAME/" /home/ubuntu/django-test-app/frontend/src/App.js
 
 # Move to frontend folder, install dependencies and create production build
 cd /home/ubuntu/django-test-app/frontend/

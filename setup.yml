@@ -37,9 +37,21 @@
       args:
           chdir: /home/ubuntu
 
+    - name: set environment variables required by django database connectivity
+      lineinfile:
+        path: /home/ubuntu/.bashrc
+        line: '{{ item }}'
+      with_items:
+        - export DBHOST={{ hostvars['localhost']['stack'].stack_outputs.DBEndpoint }}
+        - export DBNAME=taskmanagerdb
+        - export DBPASSWORD=password
+        - export DBPORT=5432
+        - export DBUSER=ubuntu
+        - export ELBDNSNAME={{ hostvars['localhost']['stack'].stack_outputs.ELBDNSName }}
+
     - name: Install application from script
       ansible.builtin.shell: 
-        cmd: ./setup.sh "{{ hostvars['localhost']['stack'].stack_outputs.DBEndpoint }}" "{{ hostvars['localhost']['stack'].stack_outputs.ELBDNSName }}"
+        cmd: ./setup.sh
         chdir: /home/ubuntu
         executable: /bin/bash
 
