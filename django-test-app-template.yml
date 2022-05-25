@@ -6,6 +6,16 @@ Parameters:
     Type: String
     Default: 10.0.0.0/16
 
+  DBUsername:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: 'django-test-app-db-user'
+    Description: Default RDS database username 
+
+  DBPassword:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: 'django-test-app-db-password'
+    Description: Default RDS database user's password 
+
 Resources:
   VPC:
     Type: 'AWS::EC2::VPC'
@@ -165,7 +175,7 @@ Resources:
   Instance1:
     Type: 'AWS::EC2::Instance'
     Properties:
-      IamInstanceProfile: ec2-s3-codedeploy 
+      IamInstanceProfile: ec2-ssm-codedeploy-role 
       ImageId: ami-0cb4e786f15603b0d
       InstanceType: t2.micro
       KeyName: ore-key
@@ -179,7 +189,7 @@ Resources:
   Instance2:
     Type: 'AWS::EC2::Instance'
     Properties:
-      IamInstanceProfile: ec2-s3-codedeploy 
+      IamInstanceProfile: ec2-ssm-codedeploy-role 
       ImageId: ami-0cb4e786f15603b0d      
       InstanceType: t2.micro
       KeyName: ore-key
@@ -255,8 +265,8 @@ Resources:
       DBSubnetGroupName: !Ref DBSubnetGroup
       Engine: postgres
       EngineVersion: 13.6
-      MasterUsername: ubuntu
-      MasterUserPassword: password  
+      MasterUsername: !Ref DBUsername 
+      MasterUserPassword: !Ref DBPassword 
       Port: 5432
       StorageType: gp2
       VPCSecurityGroups: 

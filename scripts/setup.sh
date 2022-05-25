@@ -33,29 +33,33 @@ killall uwsgi
 sudo rm -rf /var/log/uwsgi/
 sudo rm -rf /run/uwsgi/
 
+# Get database credentials from parameter store
+DB_USERNAME=$(aws ssm get-parameters --names "django-test-app-db-user" --query "Parameters[0].Value" --output text)
+DB_PASSWORD=$(aws ssm get-parameters --names "django-test-app-db-password" --query "Parameters[0].Value" --output text)
+
 # Set up environment variables
 # For Bash
-echo "export DBUSER=ubuntu" >> /home/ubuntu/.bashrc
+echo "export DBUSER=$DB_USERNAME" >> /home/ubuntu/.bashrc
 echo "export DBNAME=taskmanagerdb" >> /home/ubuntu/.bashrc
 echo "export DBHOST=$1" >> /home/ubuntu/.bashrc
-echo "export DBPASSWORD=password" >> /home/ubuntu/.bashrc
+echo "export DBPASSWORD=$DB_PASSWORD" >> /home/ubuntu/.bashrc
 echo "export DBPORT=5432" >> /home/ubuntu/.bashrc
-echo "export DATABASE_URL=postgres://ubuntu:password@$1:5432/taskmanagerdb" >> /home/ubuntu/.bashrc
+echo "export DATABASE_URL=postgres://$DB_USERNAME:$DB_PASSWORD@$1:5432/taskmanagerdb" >> /home/ubuntu/.bashrc
 
 # For other shells
-sudo echo 'DBUSER="ubuntu"' >> /etc/environment
+sudo echo 'DBUSER="'$DB_USERNAME'"' >> /etc/environment
 sudo echo 'DBNAME="taskmanagerdb"' >> /etc/environment
 sudo echo 'DBHOST="'$1'"' >> /etc/environment
-sudo echo 'DBPASSWORD="password"' >> /etc/environment
+sudo echo 'DBPASSWORD="'$DB_PASSWORD'"' >> /etc/environment
 sudo echo 'DBPORT="5432"' >> /etc/environment
-sudo echo 'DATABASE_URL="postgres://ubuntu:password@'$1':5432/taskmanagerdb"' >> /etc/environment
+sudo echo 'DATABASE_URL="postgres://'$DB_USERNAME':'$DB_PASSWORD'@'$1':5432/taskmanagerdb"' >> /etc/environment
 
-export DBUSER=ubuntu
+export DBUSER=$DB_USERNAME
 export DBNAME=taskmanagerdb
 export DBHOST=$1
-export DBPASSWORD=password
+export DBPASSWORD=$DB_PASSWORD
 export DBPORT=5432
-export DATABASE_URL=postgres://ubuntu:password@$1:5432/taskmanagerdb
+export DATABASE_URL=postgres://$DB_USERNAME:$DB_PASSWORD@$1:5432/taskmanagerdb
 
 # Clone the app repository
 git clone https://github.com/Lusengeri/django-test-app
