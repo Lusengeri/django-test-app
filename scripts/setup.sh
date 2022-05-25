@@ -2,7 +2,7 @@
 
 # Install the general dependencies
 sudo apt update
-sudo apt install python3-dev gcc python3-distutils python3-pip python3-venv postgresql libpq-dev nginx -y
+sudo apt install python3-dev gcc python3-distutils python3-pip python3-venv postgresql libpq-dev nginx awscli -y
 
 pip3 install --upgrade pip
 
@@ -34,8 +34,8 @@ sudo rm -rf /var/log/uwsgi/
 sudo rm -rf /run/uwsgi/
 
 # Get database credentials from parameter store
-DB_USERNAME=$(aws ssm get-parameters --names "django-test-app-db-user" --query "Parameters[0].Value" --output text)
-DB_PASSWORD=$(aws ssm get-parameters --names "django-test-app-db-password" --query "Parameters[0].Value" --output text)
+DB_USERNAME=$(aws ssm get-parameters --region us-west-2 --names "django-test-app-db-user" --query "Parameters[0].Value" --output text)
+DB_PASSWORD=$(aws ssm get-parameters --region us-west-2 --names "django-test-app-db-password" --query "Parameters[0].Value" --output text)
 
 # Set up environment variables
 # For Bash
