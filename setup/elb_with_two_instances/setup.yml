@@ -7,7 +7,7 @@
         stack_name: "django-test-app-stack"
         state: "present"
         region: 'us-west-2'
-        template: "django-test-app-template.yml"
+        template: "template.yml"
       register: stack
 
     - name: Add new instances to host group
