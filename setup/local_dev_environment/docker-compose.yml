@@ -26,7 +26,7 @@ services:
   backend:
     container_name: django_backend
     build:
-      context: ./backend
+      context: ../../backend
       dockerfile: django.Dockerfile
     restart: always
     environment:
@@ -40,21 +40,21 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - ./backend:/usr/src/django-test-app/backend
+      - ../../backend:/usr/src/django-test-app/backend
     depends_on:
       - db
 
   frontend:
     container_name: react_frontend
     build:
-      context: ./frontend
+      context: ../../frontend
       dockerfile: react.Dockerfile
     ports:
       - 3000:3000
     command: >
       sh -c "yarn start"
     volumes:
-      - ./frontend:/usr/src/django-test-app/frontend
+      - ../../frontend:/usr/src/django-test-app/frontend
 
 volumes:
   pg_data:
