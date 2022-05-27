@@ -66,8 +66,8 @@ sudo git clone https://github.com/Lusengeri/django-test-app
 sudo chown -R ubuntu:www-data /usr/src/django-test-app
 
 # Set up the Python virtual environment
-python3 -m venv .env
-source /usr/src/.env/bin/activate
+python3 -m venv /home/ubuntu/.env
+source /home/ubuntu/.env/bin/activate
 
 # Setup django application dependencies
 pip3 install wheel 
@@ -112,12 +112,12 @@ sudo apt install --no-install-recommends yarn -y
 MY_DOMAIN=$2
 
 # Set base url for production environment
-sudo sed -i "s/localhost:8000/$MY_DOMAIN/" /usr/src/django-test-app/frontend/src/App.js
+sed -i "s/localhost:8000/$MY_DOMAIN/" /usr/src/django-test-app/frontend/src/App.js
 
 # Move to frontend folder, install dependencies and create production build
 cd /usr/src/django-test-app/frontend/
-sudo yarn install
-sudo yarn build
+yarn install
+yarn build
 
 # Ensure availability of Django static files on /static/ prefix
 for dir in /usr/src/django-test-app/backend/static/*
