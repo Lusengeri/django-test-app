@@ -303,7 +303,7 @@ resource "aws_lb" "webservers_elb" {
     load_balancer_type = "application"
     security_groups    = [ aws_security_group.elb_sg.id ]
     #subnets            = [ for subnet in aws_subnet.public : subnet.id ]
-    subnets            = [ aws_subnet.public_subnet_1.id, aws_subnet.public_subnet_2 ]
+    subnets            = [ aws_subnet.public_subnet_1.id, aws_subnet.public_subnet_2.id ]
 }
 
 resource "aws_lb_listener" "back_end" {
