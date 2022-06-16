@@ -48,7 +48,7 @@ services:
     container_name: react_frontend
     build:
       context: ../../frontend
-      dockerfile: react.Dockerfile
+      dockerfile: dev.Dockerfile
     ports:
       - 3000:3000
     command: >
