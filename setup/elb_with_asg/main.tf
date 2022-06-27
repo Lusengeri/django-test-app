@@ -1,213 +1,246 @@
 terraform {
-    required_providers {
-        aws = {
-            source = "hashicorp/aws"
-            version = "4.14.0"
-        }
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "4.14.0"
     }
+  }
 }
 
-resource "aws_vpc" "vpc" {
-    cidr_block = "10.0.0.0/16"
-    enable_dns_support = true
-    enable_dns_hostnames = true
+# Declare variables
 
-    tags = {
-        Name = "Django-React App VPC"
-    }
+variable "db_username" {
+  description = "The username to be used for database access"
+}
+
+variable "db_password" {
+  description = "The password to be used for database access"
+}
+
+variable "key_name" {
+  description = "The SSH key used to access instances"
+}
+
+# Store SSM parameters
+
+resource "aws_ssm_parameter" "django_test_app_db_username" {
+  name      = "django-test-app-db-username"
+  overwrite = true
+  type      = "String"
+  value     = var.db_username
+}
+
+resource "aws_ssm_parameter" "django_test_app_db_password" {
+  name      = "django-test-app-db-password"
+  overwrite = true
+  type      = "String"
+  value     = var.db_password
+}
+
+# Create network resources
+
+resource "aws_vpc" "vpc" {
+  cidr_block           = "10.0.0.0/16"
+  enable_dns_support   = true
+  enable_dns_hostnames = true
+
+  tags = {
+    Name = "Django-React App VPC"
+  }
 }
 
 resource "aws_internet_gateway" "igw" {
-    vpc_id = aws_vpc.vpc.id
+  vpc_id = aws_vpc.vpc.id
 
-    tags = {
-        Name = "Django-React App IGW"
-    }
+  tags = {
+    Name = "Django-React App IGW"
+  }
 }
 
 resource "aws_subnet" "public_subnet_1" {
-    availability_zone = "us-west-2a"
-    cidr_block = "10.0.1.0/24"
-    map_public_ip_on_launch = true
-    vpc_id = aws_vpc.vpc.id
+  availability_zone       = "us-west-2a"
+  cidr_block              = "10.0.1.0/24"
+  map_public_ip_on_launch = true
+  vpc_id                  = aws_vpc.vpc.id
 
-    tags = {
-        Name = "Public Subnet 1"
-    }
+  tags = {
+    Name = "Public Subnet 1"
+  }
 }
 
 resource "aws_subnet" "public_subnet_2" {
-    availability_zone = "us-west-2b"
-    cidr_block = "10.0.2.0/24"
-    map_public_ip_on_launch = true
-    vpc_id = aws_vpc.vpc.id
+  availability_zone       = "us-west-2b"
+  cidr_block              = "10.0.2.0/24"
+  map_public_ip_on_launch = true
+  vpc_id                  = aws_vpc.vpc.id
 
-    tags = {
-        Name = "Public Subnet 2"
-    }
+  tags = {
+    Name = "Public Subnet 2"
+  }
 }
 
 resource "aws_subnet" "private_subnet_1" {
-    availability_zone = "us-west-2a"
-    cidr_block = "10.0.3.0/24"
-    map_public_ip_on_launch = false 
-    vpc_id = aws_vpc.vpc.id
+  availability_zone       = "us-west-2a"
+  cidr_block              = "10.0.3.0/24"
+  map_public_ip_on_launch = false
+  vpc_id                  = aws_vpc.vpc.id
 
-    tags = {
-        Name = "Private Subnet 1"
-    }
+  tags = {
+    Name = "Private Subnet 1"
+  }
 }
 
 resource "aws_subnet" "private_subnet_2" {
-    availability_zone = "us-west-2b"
-    cidr_block = "10.0.4.0/24"
-    map_public_ip_on_launch = false 
-    vpc_id = aws_vpc.vpc.id
+  availability_zone       = "us-west-2b"
+  cidr_block              = "10.0.4.0/24"
+  map_public_ip_on_launch = false
+  vpc_id                  = aws_vpc.vpc.id
 
-    tags = {
-        Name = "Private Subnet 2"
-    }
+  tags = {
+    Name = "Private Subnet 2"
+  }
 }
 
 resource "aws_subnet" "private_subnet_3" {
-    availability_zone = "us-west-2a"
-    cidr_block = "10.0.5.0/24"
-    map_public_ip_on_launch = false 
-    vpc_id = aws_vpc.vpc.id
+  availability_zone       = "us-west-2a"
+  cidr_block              = "10.0.5.0/24"
+  map_public_ip_on_launch = false
+  vpc_id                  = aws_vpc.vpc.id
 
-    tags = {
-        Name = "Private Subnet 3"
-    }
+  tags = {
+    Name = "Private Subnet 3"
+  }
 }
 
 resource "aws_subnet" "private_subnet_4" {
-    availability_zone = "us-west-2b"
-    cidr_block = "10.0.6.0/24"
-    map_public_ip_on_launch = false 
-    vpc_id = aws_vpc.vpc.id
+  availability_zone       = "us-west-2b"
+  cidr_block              = "10.0.6.0/24"
+  map_public_ip_on_launch = false
+  vpc_id                  = aws_vpc.vpc.id
 
-    tags = {
-        Name = "Private Subnet 4"
-    }
+  tags = {
+    Name = "Private Subnet 4"
+  }
 }
+
 resource "aws_route_table" "public_route_table" {
-    vpc_id = aws_vpc.vpc.id
+  vpc_id = aws_vpc.vpc.id
 
-    route {
-        cidr_block = "0.0.0.0/0"
-        gateway_id = aws_internet_gateway.igw.id
-    }
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.igw.id
+  }
 
-    tags = {
-        Name = "Public Route Table"
-    }
+  tags = {
+    Name = "Public Route Table"
+  }
 }
 
 resource "aws_route_table_association" "public_subnet1_rt_assoc" {
-    subnet_id = aws_subnet.public_subnet_1.id
-    route_table_id = aws_route_table.public_route_table.id
+  subnet_id      = aws_subnet.public_subnet_1.id
+  route_table_id = aws_route_table.public_route_table.id
 }
 
 resource "aws_route_table_association" "public_subnet2_rt_assoc" {
-    subnet_id = aws_subnet.public_subnet_2.id
-    route_table_id = aws_route_table.public_route_table.id
+  subnet_id      = aws_subnet.public_subnet_2.id
+  route_table_id = aws_route_table.public_route_table.id
 }
 
 resource "aws_security_group" "elb_sg" {
-    name = "elb_sg"
-    vpc_id = aws_vpc.vpc.id
+  name   = "elb_sg"
+  vpc_id = aws_vpc.vpc.id
 
-    ingress {
-        description = "allow HTTP connections from the internet"
-        protocol = "tcp"
-        from_port = 80 
-        to_port = 80 
-        cidr_blocks = ["0.0.0.0/0"]
-    }
+  ingress {
+    description = "allow HTTP connections from the internet"
+    protocol    = "tcp"
+    from_port   = 80
+    to_port     = 80
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-    egress {
-        from_port = 0
-        to_port = 0
-        protocol = -1
-        cidr_blocks = ["0.0.0.0/0"]
-    }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = -1
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-    tags = {
-        Name = "ELB-Security-Group"
-    }
+  tags = {
+    Name = "ELB-Security-Group"
+  }
 }
 
 resource "aws_security_group" "bastion_sg" {
-    name = "bastion_sg"
-    vpc_id = aws_vpc.vpc.id
+  name   = "bastion_sg"
+  vpc_id = aws_vpc.vpc.id
 
-    ingress {
-        description = "allow SSH connections from the internet"
-        protocol = "tcp"
-        from_port = 22 
-        to_port = 22 
-        cidr_blocks = ["0.0.0.0/0"]
-    }
+  ingress {
+    description = "allow SSH connections from the internet"
+    protocol    = "tcp"
+    from_port   = 22
+    to_port     = 22
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-    egress {
-        from_port = 0
-        to_port = 0
-        protocol = -1
-        cidr_blocks = ["0.0.0.0/0"]
-    }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = -1
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-    tags = {
-        Name = "Bastion Host Security Group"
-    }
+  tags = {
+    Name = "Bastion Host Security Group"
+  }
 }
 
 resource "aws_security_group" "webservers_sg" {
-    name = "webservers_sg"
-    vpc_id = aws_vpc.vpc.id
+  name   = "webservers_sg"
+  vpc_id = aws_vpc.vpc.id
 
-    ingress {
-        description = "allow HTTP connections from the ELB"
-        protocol = "tcp"
-        from_port = 80
-        to_port = 80
-        security_groups = [aws_security_group.elb_sg.id]
-    }
+  ingress {
+    description     = "allow HTTP connections from the ELB"
+    protocol        = "tcp"
+    from_port       = 80
+    to_port         = 80
+    security_groups = [aws_security_group.elb_sg.id]
+  }
 
-    ingress {
-        description = "allow SSH from the bastion host"
-        protocol = "tcp"
-        from_port = 22
-        to_port = 22
-        security_groups = [aws_security_group.bastion_sg.id]
-    }
+  ingress {
+    description     = "allow SSH from the bastion host"
+    protocol        = "tcp"
+    from_port       = 22
+    to_port         = 22
+    security_groups = [aws_security_group.bastion_sg.id]
+  }
 
-    egress {
-        from_port = 0
-        to_port = 0
-        protocol = -1
-        cidr_blocks = ["0.0.0.0/0"]
-    }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = -1
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-    tags = {
-        Name = "Webservers Security Group"
-    }
+  tags = {
+    Name = "Webservers Security Group"
+  }
 }
 
 resource "aws_security_group" "db_sg" {
-    name = "db_sg"
-    vpc_id = aws_vpc.vpc.id
+  name   = "db_sg"
+  vpc_id = aws_vpc.vpc.id
 
-    ingress {
-        description = "allow webservers group to connect to postgresql"
-        protocol = "tcp"
-        from_port = 5432 
-        to_port = 5432 
-        security_groups = [aws_security_group.webservers_sg.id]
-    }
+  ingress {
+    description     = "allow webservers group to connect to postgresql"
+    protocol        = "tcp"
+    from_port       = 5432
+    to_port         = 5432
+    security_groups = [aws_security_group.webservers_sg.id]
+  }
 
-    tags = {
-        Name = "Databases Security Group"
-    }
+  tags = {
+    Name = "Databases Security Group"
+  }
 }
 
 data "aws_ami" "ubuntu" {
@@ -227,116 +260,184 @@ data "aws_ami" "ubuntu" {
 }
 
 resource "aws_instance" "bastion_host" {
-    ami = data.aws_ami.ubuntu.id
-    associate_public_ip_address = true
-    instance_type = "t2.micro"
-    key_name = "ore-key"
-    subnet_id = aws_subnet.public_subnet_1.id
-    vpc_security_group_ids = [ aws_security_group.bastion_sg.id ]
+  ami                         = data.aws_ami.ubuntu.id
+  associate_public_ip_address = true
+  instance_type               = "t2.micro"
+  key_name                    = var.key_name
+  subnet_id                   = aws_subnet.public_subnet_1.id
+  vpc_security_group_ids      = [aws_security_group.bastion_sg.id]
 
-    tags = {
-        Name = "Django-React App Bastion Host"
+  tags = {
+    Name = "Django-React App Bastion Host"
+  }
+}
+
+data "aws_iam_policy_document" "instance-assume-role-policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
     }
+  }
+}
+
+resource "aws_iam_role" "instance_role" {
+  name               = "instance-role"
+  assume_role_policy = data.aws_iam_policy_document.instance-assume-role-policy.json
+
+  inline_policy {
+    name = "s3_read_only_policy"
+
+    policy = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          Action   = ["s3:Get*", "s3:DescribeObject", "s3:List*", "s3-object-lambda:Get*", "s3-object-lambda:List*"]
+          Effect   = "Allow"
+          Resource = "*"
+        },
+      ]
+    })
+  }
+
+  inline_policy {
+    name = "ssm_access"
+
+    policy = jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        {
+          Action   = ["ssm:*"]
+          Effect   = "Allow"
+          Resource = "*"
+        },
+      ]
+    })
+  }
+}
+
+resource "aws_iam_instance_profile" "test_app_instance_profile" {
+  name = "test-app-instance-profile"
+  role = aws_iam_role.instance_role.name
 }
 
 resource "aws_launch_template" "webservers_template" {
-    name = "server-template"
+  name = "server-template"
 
-    iam_instance_profile {
-        name = "ec2-ssm-codedeploy-role"
+  iam_instance_profile {
+    name = aws_iam_instance_profile.test_app_instance_profile.name
+  }
+
+  image_id               = "ami-0414f6fa12219f936"
+  instance_type          = "t2.micro"
+  key_name               = var.key_name
+  user_data              = filebase64("${path.module}/scripts/user_data.sh")
+  vpc_security_group_ids = [aws_security_group.webservers_sg.id]
+
+  tag_specifications {
+    resource_type = "instance"
+
+    tags = {
+      Name = "django-test-app"
     }
-
-    image_id = "ami-0cb4e786f15603b0d"
-    instance_type = "t2.micro"
-    key_name = "ore-key"
-    vpc_security_group_ids = [ aws_security_group.webservers_sg.id ] 
-
-    tag_specifications {
-        resource_type = "instance"
-
-        tags = {
-            Name = "django-test-app"
-        }
-    }
+  }
 }
 
 resource "aws_lb_target_group" "autoscaling_tg" {
-    name     = "autoscaling-tg"
-    port     = 80
-    protocol = "HTTP"
-    vpc_id   = aws_vpc.vpc.id
+  name     = "autoscaling-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = aws_vpc.vpc.id
 }
 
-
 resource "aws_autoscaling_group" "webservers_asg" {
-    name = "webservers-asg"
-    desired_capacity   = 2
-    max_size           = 6
-    min_size           = 2
-    target_group_arns = [ aws_lb_target_group.autoscaling_tg.arn ]
-    vpc_zone_identifier = [ aws_subnet.private_subnet_1.id, aws_subnet.private_subnet_2.id ]
+  name                = "webservers-asg"
+  desired_capacity    = 2
+  max_size            = 6
+  min_size            = 2
+  target_group_arns   = [aws_lb_target_group.autoscaling_tg.arn]
+  vpc_zone_identifier = [aws_subnet.public_subnet_1.id, aws_subnet.public_subnet_2.id]
 
-    launch_template {
-        id      = aws_launch_template.webservers_template.id
-        version = "$Latest"
-    }
+  launch_template {
+    id      = aws_launch_template.webservers_template.id
+    version = "$Latest"
+  }
+
+  depends_on = [
+    aws_ssm_parameter.django_test_app_db_username,
+    aws_ssm_parameter.django_test_app_db_password,
+    aws_ssm_parameter.django_test_app_db_host,
+    aws_db_instance.default
+  ]
 }
 
 resource "aws_autoscaling_policy" "cpu_usage_policy" {
-    name                   = "cpu_usage_policy"
-    autoscaling_group_name = aws_autoscaling_group.webservers_asg.name
-    adjustment_type        = "ChangeInCapacity"
-    cooldown               = 300
-    policy_type = "TargetTrackingScaling"
+  name                   = "cpu_usage_policy"
+  autoscaling_group_name = aws_autoscaling_group.webservers_asg.name
+  adjustment_type        = "ChangeInCapacity"
+  policy_type            = "TargetTrackingScaling"
 
-    target_tracking_configuration {
-        predefined_metric_specification {
-            predefined_metric_type = "ASGAverageCPUUtilization"
-        }
-        target_value = 40.0
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
     }
+    target_value = 40.0
+  }
 }
 
 resource "aws_lb" "webservers_elb" {
-    name               = "webservers-elb"
-    internal           = false
-    load_balancer_type = "application"
-    security_groups    = [ aws_security_group.elb_sg.id ]
-    #subnets            = [ for subnet in aws_subnet.public : subnet.id ]
-    subnets            = [ aws_subnet.public_subnet_1.id, aws_subnet.public_subnet_2.id ]
+  name               = "webservers-elb"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.elb_sg.id]
+  #subnets            = [ for subnet in aws_subnet.public : subnet.id ]
+  subnets = [aws_subnet.public_subnet_1.id, aws_subnet.public_subnet_2.id]
 }
 
 resource "aws_lb_listener" "back_end" {
-    load_balancer_arn = aws_lb.webservers_elb.arn
-    port              = "80"
-    protocol          = "HTTP"
+  load_balancer_arn = aws_lb.webservers_elb.arn
+  port              = "80"
+  protocol          = "HTTP"
 
-    default_action {
-        type             = "forward"
-        target_group_arn = aws_lb_target_group.autoscaling_tg.arn
-    }
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.autoscaling_tg.arn
+  }
 }
 
 resource "aws_db_subnet_group" "db_subnet_group" {
-    name       = "db-subnet-group"
-    subnet_ids = [ aws_subnet.private_subnet_3.id, aws_subnet.private_subnet_4.id ]
+  name       = "db-subnet-group"
+  subnet_ids = [aws_subnet.private_subnet_3.id, aws_subnet.private_subnet_4.id]
 
-    tags = {
-        Name = "My DB subnet group"
-    }
+  tags = {
+    Name = "My DB subnet group"
+  }
 }
 
 resource "aws_db_instance" "default" {
-    allocated_storage    = 10
-    db_name              = "taskmanagerdb"
-    db_subnet_group_name = aws_db_subnet_group.db_subnet_group.name
-    engine               = "postgres"
-    engine_version       = "13.6"
-    instance_class       = "db.t3.micro"
-    multi_az = false
-    username             = "ubuntu"
-    password             = "password"
-    port = 5432
-    skip_final_snapshot  = true
-    vpc_security_group_ids = [ aws_security_group.db_sg.id ]
+  allocated_storage      = 10
+  db_name                = "taskmanagerdb"
+  db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name
+  engine                 = "postgres"
+  engine_version         = "13.6"
+  instance_class         = "db.t3.micro"
+  multi_az               = false
+  username               = var.db_username
+  password               = var.db_password
+  port                   = 5432
+  skip_final_snapshot    = true
+  vpc_security_group_ids = [aws_security_group.db_sg.id]
+}
+
+resource "aws_ssm_parameter" "django_test_app_db_host" {
+  name      = "django-test-app-db-host"
+  overwrite = true
+  type      = "String"
+  value     = aws_db_instance.default.address
+}
+
+output "elb_endpoint" {
+  value = aws_lb.webservers_elb.dns_name
 }
