@@ -23,7 +23,7 @@ spec:
             - name: DBPASSWORD
               value: password
             - name: DBHOST
-              value: localhost
+              value: db
             - name: DBPORT
               value: "5432"
             - name: DBNAME
