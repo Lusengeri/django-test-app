@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      component: backend
+  template:
+    metadata:
+      labels:
+        component: backend
+    spec:
+      containers:
+        - name: backend
+          image: lusengeri/django-test-app-backend:1.0.0
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DBUSER
+              value: postgres
+            - name: DBPASSWORD
+              value: password
+            - name: DBHOST
+              value: localhost
+            - name: DBPORT
+              value: "5432"
+            - name: DBNAME
+              value: taskmanager_db 

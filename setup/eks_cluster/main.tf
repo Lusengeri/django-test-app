@@ -43,8 +43,6 @@ resource "aws_subnet" "public_subnet_2" {
   map_public_ip_on_launch = true
   vpc_id                  = aws_vpc.vpc.id
 
-  
-
   tags = {
     env      = "development"
     #"kubernetes.io/cluster/${aws_eks_cluster.my_cluster.name}" = "shared"
@@ -107,6 +105,14 @@ resource "aws_security_group" "cluster_sg" {
     protocol = "tcp"
     from_port = 80 
     to_port = 80 
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "allow HTTP connections from the internet"
+    protocol = "tcp"
+    from_port = 8000 
+    to_port = 8000
     cidr_blocks = ["0.0.0.0/0"]
   }
 

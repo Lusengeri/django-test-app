@@ -1,4 +1,4 @@
-FROM node:17.9.0 as dev
+FROM node:16.16-alpine as dev
 
 WORKDIR /usr/src/django-test-app/frontend
 
