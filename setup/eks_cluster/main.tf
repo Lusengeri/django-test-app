@@ -33,7 +33,8 @@ resource "aws_subnet" "public_subnet_1" {
 
   tags = {
     env      = "development"
-    #"kubernetes.io/cluster/${aws_eks_cluster.my_cluster.name}" = "shared"
+    "kubernetes.io/cluster/${aws_eks_cluster.my_cluster.name}" = "shared"
+    "kubernetes.io/role/elb" = "1"
   }
 }
 
@@ -45,7 +46,8 @@ resource "aws_subnet" "public_subnet_2" {
 
   tags = {
     env      = "development"
-    #"kubernetes.io/cluster/${aws_eks_cluster.my_cluster.name}" = "shared"
+    "kubernetes.io/cluster/${aws_eks_cluster.my_cluster.name}" = "shared"
+    "kubernetes.io/role/elb" = "1"
   }
 }
 
@@ -319,7 +321,7 @@ resource "aws_iam_role_policy_attachment" "example-AmazonEC2ContainerRegistryRea
 }
 
 resource "aws_eks_cluster" "my_cluster" {
-  name       = "my_cluster"
+  name       = "my-cluster"
   #role_arn   = aws_iam_role.eks_role.arn
   role_arn = "arn:aws:iam::940482447799:role/eks-Cluster-Role"
 
